@@ -5,5 +5,5 @@
 20 minutos de desafio em dupla...
 
 
-<!-- <a href="https://inspertecweb.github.io/ExerciciosSQL/bd1.html">FOR REAL - DUPLAS - Comunicar quando atingir 100%</a> -->
+<a href="https://inspertecweb.github.io/ExerciciosSQL/bd1.html">FOR REAL - DUPLAS - Comunicar quando atingir 100%</a> 
 
