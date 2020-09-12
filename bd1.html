@@ -573,6 +573,18 @@ div.CardStyle {
 	overflow: visible;
 }
 
+div.SlotStyle {
+	position: absolute;
+	padding: 5px;
+	border-style: solid;
+	border-width: 1px;
+	color: #000040;
+	background-color: #FFFFFF;
+	left: -50px;
+	top: -50px;
+	overflow: visible;
+}
+
 .rtl{
 	text-align: right;
 	font-size: large;
@@ -1043,11 +1055,21 @@ function CardHighlight(){
 }
 Card.prototype.Highlight=CardHighlight;
 
+function SlotHighlight(){
+	this.css.backgroundColor='#A0A0C0';
+}
+Card.prototype.SlotHighlight=SlotHighlight;
+
 function CardUnhighlight(){
 	this.css.backgroundColor='#FFFFFF';
 	this.css.color='#000040';
 }
 Card.prototype.Unhighlight=CardUnhighlight;
+
+function SlotUnhighlight(){
+	this.css.backgroundColor='#C0C0C0';
+}
+Card.prototype.SlotUnhighlight=SlotUnhighlight;
 
 function CardOverlap(OtherCard){
 	var smR=(this.GetR()<(OtherCard.GetR()+this.OverlapTolerance))? this.GetR(): (OtherCard.GetR()+this.OverlapTolerance);
@@ -1110,6 +1132,9 @@ function beginDrag(e, DragNum) {
 		window.onmouseup=endDrag;
 	} 
 	DC[CurrDrag].Highlight();
+	for (var i=0; i<CS.length; i++){
+		CS[i].SlotHighlight();
+	}
 	topZ++;
 	DC[CurrDrag].css.zIndex = topZ;
 	window.lastX=Ev.clientX; 
@@ -1120,6 +1145,9 @@ function beginDrag(e, DragNum) {
 function endDrag(e) { 
 	if (CurrDrag == -1) {return};
 	DC[CurrDrag].Unhighlight();
+	for (var i=0; i<CS.length; i++){
+		CS[i].SlotUnhighlight();
+	}
 	if (C.ie){document.onmousemove=null}else{window.onmousemove=null;}
 	onEndDrag();	
 	CurrDrag = -1;
@@ -1156,6 +1184,8 @@ var RightColPos = 500;
 var DragTop = 120;
 var Finished = false;
 
+//Card Slots array
+CS = new Array();
 //Fixed and draggable card arrays
 FC = new Array();
 DC = new Array();
@@ -1239,6 +1269,7 @@ function StartUp(){
 	var Widest = 0;
 	var CardContent = '';
 	for (var i=0; i<F.length; i++){
+		CS[i] = new Card('S' + i, 10);
 		CardContent = F[i][0];
 		FC[i] = new Card('F' + i, 10);
 		FC[i].elm.innerHTML = CardContent; 
@@ -1294,11 +1325,15 @@ function StartUp(){
 
 	for (var i=0; i<F.length; i++){
 		FC[i].SetW(Widest);
+		CS[i].SetW(Widest);
 		if (FC[i].GetH() < Highest){
 			FC[i].SetH(HeightToSet);
 		}
+		CS[i].SetH(HeightToSet);
 		FC[i].SetT(CurrTop);
+		CS[i].SetT(CurrTop);
 		FC[i].SetL(LeftColPos);
+		CS[i].SetL(FC[i].GetR() + 5);
 		FC[i].SetHome();
 		TempInt = FC[i].GetH();
 		CurrTop = CurrTop + TempInt + 5;
@@ -1555,6 +1590,10 @@ function CheckAnswers(){
 
 for (var i=0; i<F.length; i++){
 	document.write('<div id="F' + i + '" class="CardStyle"></div>');
+}
+
+for (var i=0; i<F.length; i++){
+	document.write('<div id="S' + i + '" class="SlotStyle"></div>');
 }
 
 for (var i=0; i<D.length; i++){
